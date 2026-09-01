@@ -166,7 +166,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       {/* Foreground Hero Content – Responsive Layout on Desktop */}
       <motion.div
         style={{ y: contentY, opacity: contentOpacity }}
-        className="relative z-20 px-4 sm:px-6 md:px-12 max-w-7xl mx-auto w-full pt-1 sm:pt-2 flex-1 lg:flex-initial flex flex-col justify-between lg:justify-center"
+        className="relative z-20 pl-3.5 sm:pl-4 md:pl-6 lg:pl-6 xl:pl-8 pr-4 sm:pr-6 md:pr-12 max-w-7xl mx-auto w-full pt-1 sm:pt-2 flex-1 lg:flex-initial flex flex-col justify-between lg:justify-center"
       >
         {/* Text & CTAs (Vertically Centered on Desktop) */}
         <div className="flex flex-col max-w-2xl flex-1 lg:flex-initial justify-between lg:justify-center lg:py-4">
