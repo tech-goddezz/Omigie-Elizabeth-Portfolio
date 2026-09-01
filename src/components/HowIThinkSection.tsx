@@ -673,36 +673,42 @@ function DestinationProductNode({ cameraZ }: { cameraZ: number }) {
             }}
             className="pointer-events-none select-none text-center w-[320px] sm:w-[480px] md:w-[600px] px-4 transition-opacity duration-200"
           >
+            {/* Contrast-enhancing Circular Scrim Backdrop */}
+            <div
+              aria-hidden="true"
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[340px] h-[340px] sm:w-[440px] sm:h-[440px] md:w-[500px] md:h-[500px] rounded-full bg-radial from-[#08080C]/88 via-[#08080C]/75 to-[#08080C]/0 backdrop-blur-md -z-10 pointer-events-none shadow-[0_0_60px_rgba(0,0,0,0.85)]"
+            />
+
             {/* Ambient Glow */}
             <div
               aria-hidden="true"
-              className="absolute -inset-20 rounded-full bg-radial from-[#FF4D1A]/18 via-[#7C3AED]/10 to-transparent blur-3xl -z-10 animate-pulse"
+              className="absolute -inset-20 rounded-full bg-radial from-[#FF4D1A]/15 via-[#7C3AED]/10 to-transparent blur-3xl -z-20 pointer-events-none"
             />
 
             {/* Grand Monumental PRODUCT Wordmark */}
-            <h3 className="text-5xl sm:text-7xl md:text-8xl font-black tracking-tight font-sans drop-shadow-2xl leading-none">
+            <h3 className="text-5xl sm:text-7xl md:text-8xl font-black tracking-tight font-sans drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)] leading-none">
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-zinc-100 to-zinc-300">
                 PROD
               </span>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF4D1A] via-[#FF7A00] to-[#A855F7]">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF6E38] via-[#FFA14A] to-[#C084FC]">
                 UCT
               </span>
             </h3>
 
             {/* Culmination Philosophy Statement */}
-            <p className="mt-4 text-xs sm:text-sm md:text-base text-zinc-300 font-medium max-w-md mx-auto leading-relaxed drop-shadow">
+            <p className="mt-4 text-xs sm:text-sm md:text-base text-zinc-200 font-medium max-w-md mx-auto leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
               Where the idea, the user, and the code come together into something that actually works.
             </p>
 
             {/* Core Pillars */}
-            <div className="mt-6 flex items-center justify-center gap-3 text-[10px] sm:text-xs font-mono tracking-widest uppercase text-zinc-400">
-              <span className="text-[#FF4D1A]">Problem</span>
+            <div className="mt-6 flex items-center justify-center gap-3 text-[10px] sm:text-xs font-mono tracking-widest uppercase text-zinc-400 drop-shadow-[0_2px_6px_rgba(0,0,0,0.9)]">
+              <span className="text-[#FF6E38] font-semibold">Problem</span>
               <span className="text-zinc-600">&bull;</span>
               <span className="text-[#A855F7]">User</span>
               <span className="text-zinc-600">&bull;</span>
               <span className="text-white font-semibold">AI</span>
               <span className="text-zinc-600">&bull;</span>
-              <span className="text-[#FF7A00]">Ship</span>
+              <span className="text-[#FFA14A] font-semibold">Ship</span>
             </div>
           </div>
         </Html>
