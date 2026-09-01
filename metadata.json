@@ -1,0 +1,6 @@
+{
+  "name": "Fluxora",
+  "description": "Portfolio for Omigie Elizabeth - AI Product Engineer & Frontend Developer",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
