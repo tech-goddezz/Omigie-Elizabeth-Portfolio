@@ -3,9 +3,54 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Fluxora</title>
+    <script>
+      // Defensive guard for browser extensions (MetaMask/Web3 wallets) attempting to redefine window.ethereum
+      try {
+        let _eth = undefined;
+        if (!Object.prototype.hasOwnProperty.call(window, 'ethereum')) {
+          Object.defineProperty(window, 'ethereum', {
+            get() { return _eth; },
+            set(val) { _eth = val; },
+            configurable: true,
+            enumerable: true,
+            writable: true
+          });
+        }
+      } catch (_) {
+        // Ignore extension injection collisions
+      }
+
+      // Suppress unhandled runtime errors caused by third-party browser extension injection scripts
+      window.addEventListener('error', function (event) {
+        if (
+          event &&
+          event.message &&
+          (event.message.includes('ethereum') ||
+            event.message.includes('MetaMask') ||
+            event.message.includes('Cannot redefine property: ethereum'))
+        ) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          return true;
+        }
+      }, true);
+
+      window.addEventListener('unhandledrejection', function (event) {
+        if (
+          event &&
+          event.reason &&
+          (String(event.reason).includes('ethereum') ||
+            String(event.reason).includes('MetaMask') ||
+            String(event.reason).includes('Cannot redefine property: ethereum'))
+        ) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+        }
+      }, true);
+    </script>
+    <title>Omigie Elizabeth | AI Product Engineer & Frontend Developer</title>
     <meta name="description" content="Portfolio for Omigie Elizabeth - AI Product Engineer & Frontend Developer" />
-    <meta property="og:title" content="Fluxora" />
+    <meta property="og:title" content="Omigie Elizabeth | AI Product Engineer & Frontend Developer" />
     <meta property="og:description" content="Portfolio for Omigie Elizabeth - AI Product Engineer & Frontend Developer" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
