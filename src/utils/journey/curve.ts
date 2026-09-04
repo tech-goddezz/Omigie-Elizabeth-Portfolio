@@ -14,6 +14,62 @@ export function smoothstep(min: number, max: number, value: number): number {
   return x * x * (3 - 2 * x);
 }
 
+export interface DwellZone {
+  approachStart: number;
+  holdStart: number;
+  holdEnd: number;
+  departEnd: number;
+}
+
+/**
+ * Builds a monotonic lookup table that warps linear scroll progress (0..1) into
+ * "journey progress" where velocity drops to near-zero inside each zone's hold
+ * window and boosts above normal just after, so the camera reads as pausing at
+ * each concept then gliding quickly to the next — while still ending at exactly 1.
+ */
+export function buildDwellWarpLUT(
+  zones: DwellZone[],
+  options: { holdSpeed?: number; boostSpeed?: number; samples?: number } = {}
+): Float32Array {
+  const { holdSpeed = 0.04, boostSpeed = 1.6, samples = 512 } = options;
+
+  function velocityAt(p: number): number {
+    for (const z of zones) {
+      if (p >= z.approachStart && p < z.holdStart) {
+        const t = (p - z.approachStart) / Math.max(0.0001, z.holdStart - z.approachStart);
+        return THREE.MathUtils.lerp(1, holdSpeed, smoothstep(0, 1, t));
+      }
+      if (p >= z.holdStart && p <= z.holdEnd) {
+        return holdSpeed;
+      }
+      if (p > z.holdEnd && p <= z.departEnd) {
+        const t = (p - z.holdEnd) / Math.max(0.0001, z.departEnd - z.holdEnd);
+        return THREE.MathUtils.lerp(holdSpeed, boostSpeed, smoothstep(0, 1, t));
+      }
+    }
+    return 1;
+  }
+
+  const lut = new Float32Array(samples + 1);
+  let acc = 0;
+  lut[0] = 0;
+  for (let i = 1; i <= samples; i++) {
+    acc += velocityAt(i / samples) * (1 / samples);
+    lut[i] = acc;
+  }
+  const total = lut[samples] || 1;
+  for (let i = 0; i <= samples; i++) lut[i] /= total;
+  return lut;
+}
+
+export function sampleDwellWarp(lut: Float32Array, p: number): number {
+  const samples = lut.length - 1;
+  const idx = THREE.MathUtils.clamp(p, 0, 1) * samples;
+  const i0 = Math.floor(idx);
+  const i1 = Math.min(samples, i0 + 1);
+  return THREE.MathUtils.lerp(lut[i0], lut[i1], idx - i0);
+}
+
 /**
  * Calculates a checkpoint's real-time activation state from current normalized journey progress.
  * Does not allocate new objects.
