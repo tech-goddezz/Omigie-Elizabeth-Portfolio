@@ -5,6 +5,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useScrollAnimation } from '../utils/motion';
 import { ProjectMediaFrame } from './ProjectMediaFrame';
+import { selectedProjects } from '../data/resumeData';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -144,16 +145,13 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
   const [activeFilter, setActiveFilter] = useState<ProjectFilter>('All');
 
-  const projects: ProjectItem[] = [
+  const siteProjectMeta = [
     {
       id: 1,
       number: '01',
       title: 'DevClarity',
-      subtitle: 'AI Thinking Assistant',
       category: 'AI Product',
-      accent: 'violet',
-      description: 'An AI-powered thinking assistant that helps developers structure their approach before writing code - built on the Groq API with Llama 3.3, not just another code generator.',
-      tags: ['React', 'TypeScript', 'Groq API', 'Vite'],
+      accent: 'violet' as const,
       image: '',
       poster: 'https://res.cloudinary.com/eltckiww/image/upload/f_auto,q_auto/v1787638296/file_00000000b7a8821093a060f0daf00ec5_drbbns.png',
       video: 'https://res.cloudinary.com/eltckiww/video/upload/f_auto,q_auto/v1787636084/lv_0_20260825062815_w9cgdc.mp4',
@@ -163,11 +161,8 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
       id: 2,
       number: '02',
       title: 'GTCO GTWorld App',
-      subtitle: 'Mobile Application',
       category: 'Frontend Engineering',
-      accent: 'orange',
-      description: 'A pixel-perfect mobile banking app clone built screen-by-screen from Figma, with a full KYC flow, transaction history, and biometric-secured transfers.',
-      tags: ['React Native', 'Expo Router', 'Zustand', 'NativeWind'],
+      accent: 'orange' as const,
       image: '',
       poster: 'https://res.cloudinary.com/eltckiww/image/upload/f_auto,q_auto/v1787638301/file_000000006d1c81f489645c17654aa4f5_ji7zee.png',
       video: 'https://res.cloudinary.com/eltckiww/video/upload/f_auto,q_auto/v1787636076/lv_0_20260825055409_p86efa.mp4',
@@ -177,11 +172,8 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
       id: 3,
       number: '03',
       title: 'Coalition Patient Dashboard',
-      subtitle: 'Healthcare Dashboard',
       category: 'Frontend Engineering',
-      accent: 'violet',
-      description: 'Comprehensive medical dashboard tracking patient vital stats, diagnostic history, and health metrics with interactive charts.',
-      tags: ['React', 'Chart.js', 'TypeScript', 'Tailwind CSS'],
+      accent: 'violet' as const,
       image: '',
       poster: 'https://res.cloudinary.com/eltckiww/image/upload/f_auto,q_auto/v1787638300/file_0000000031b881f4bf6538ecc069498b_yssaym.png',
       video: 'https://res.cloudinary.com/eltckiww/video/upload/f_auto,q_auto/v1787636071/lv_0_20260825053937_cuvf9p.mp4',
@@ -191,11 +183,8 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
       id: 4,
       number: '04',
       title: 'Simple Mini Portfolio',
-      subtitle: 'Personal Portfolio UI',
       category: 'Frontend Engineering',
-      accent: 'orange',
-      description: 'A clean, responsive mini portfolio showcasing technical projects, skillset hierarchy, and direct contact channels with refined animations.',
-      tags: ['HTML5', 'CSS3', 'Flexbox', 'Responsive UI'],
+      accent: 'orange' as const,
       image: '',
       poster: 'https://res.cloudinary.com/eltckiww/image/upload/f_auto,q_auto/v1787638298/file_000000009ec882109918718f6534a4f9_nvxgep.png',
       video: 'https://res.cloudinary.com/eltckiww/video/upload/f_auto,q_auto/v1787636077/lv_0_20260825061727_jyzsrs.mp4',
@@ -205,11 +194,8 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
       id: 5,
       number: '05',
       title: 'Testimonials Grid Section',
-      subtitle: 'Complex Grid Layout',
       category: 'Frontend Engineering',
-      accent: 'violet',
-      description: 'Dynamic testimonial layout showcasing responsive asymmetric grid positioning and verified customer reviews.',
-      tags: ['CSS Grid', 'Tailwind CSS', 'Responsive UI'],
+      accent: 'violet' as const,
       image: '',
       poster: 'https://res.cloudinary.com/eltckiww/image/upload/f_auto,q_auto/v1787638299/file_00000000420c8210b4eeb9dca36537eb_j6amfm.png',
       video: 'https://res.cloudinary.com/eltckiww/video/upload/f_auto,q_auto/v1787636071/lv_0_20260825061159_shqxes.mp4',
@@ -219,11 +205,8 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
       id: 6,
       number: '06',
       title: 'Simple Omelette Recipe',
-      subtitle: 'Clean Content Layout',
       category: 'Frontend Engineering',
-      accent: 'orange',
-      description: 'Accessible and clean culinary preparation guide with structured nutritional data, ingredients list, and method steps.',
-      tags: ['Semantic HTML', 'CSS3', 'Typography'],
+      accent: 'orange' as const,
       image: '',
       poster: 'https://res.cloudinary.com/eltckiww/image/upload/f_auto,q_auto/v1787638302/file_00000000633882438944193d4b7eec70_frb9lp.png',
       video: 'https://res.cloudinary.com/eltckiww/video/upload/f_auto,q_auto/v1787636064/lv_0_20260825060628_sbqcuh.mp4',
@@ -233,11 +216,8 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
       id: 7,
       number: '07',
       title: 'Blog Preview Card',
-      subtitle: 'Interactive Content Card',
       category: 'Frontend Engineering',
-      accent: 'violet',
-      description: 'An interactive publication preview card with hover micro-interactions, responsive typography hierarchy, and tag filtering.',
-      tags: ['HTML5', 'CSS3', 'Tailwind CSS', 'Micro-interactions'],
+      accent: 'violet' as const,
       image: '',
       poster: 'https://res.cloudinary.com/eltckiww/image/upload/f_auto,q_auto/v1787638300/file_00000000b4b48210a90ba9bb2a5aacce_csviy7.png',
       video: 'https://res.cloudinary.com/eltckiww/video/upload/f_auto,q_auto/v1787636067/lv_0_20260825055031_iz2037.mp4',
@@ -247,11 +227,8 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
       id: 8,
       number: '08',
       title: 'QR Code Component',
-      subtitle: 'Component UI Design',
       category: 'Frontend Engineering',
-      accent: 'orange',
-      description: 'A pixel-perfect QR code preview card matching exact design specs with clean CSS styling, optical centering, and elevation shadows.',
-      tags: ['HTML5', 'CSS3', 'Responsive UI'],
+      accent: 'orange' as const,
       image: '',
       poster: 'https://res.cloudinary.com/eltckiww/image/upload/v1788190364/file_000000004cbc81f49882c8d0d631a475_jhb3gt.png',
       video: 'https://res.cloudinary.com/eltckiww/video/upload/v1788190374/lv_0_20260831161637_bgnfwi.mp4',
@@ -261,17 +238,24 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
       id: 9,
       number: '09',
       title: 'Social Links Profile',
-      subtitle: 'Profile Interface Card',
       category: 'Frontend Engineering',
-      accent: 'violet',
-      description: 'A high-contrast bio-link interface with accessible >=44px touch targets, smooth keyboard focus rings, and zero dependencies.',
-      tags: ['HTML5', 'CSS3', 'Flexbox', 'Mobile-First'],
+      accent: 'violet' as const,
       image: '',
       poster: 'https://res.cloudinary.com/eltckiww/image/upload/v1788190364/file_000000009f7c81f4a5bf5f45414a9e8a_bdomh4.png',
       video: 'https://res.cloudinary.com/eltckiww/video/upload/v1788190372/lv_0_20260831160550_gux19m.mp4',
       liveUrl: 'https://social-links-profile-neon-rho.vercel.app/',
     },
   ];
+
+  const projects: ProjectItem[] = siteProjectMeta.map((meta) => {
+    const shared = selectedProjects.find((p) => p.title === meta.title);
+    return {
+      ...meta,
+      subtitle: shared?.subtitle || '',
+      description: shared?.description || '',
+      tags: shared?.tags || [],
+    };
+  });
 
   const filteredProjects = projects.filter((project) => {
     if (activeFilter === 'All') return true;

@@ -593,12 +593,12 @@ export const InteractiveModals: React.FC<InteractiveModalsProps> = ({ type, onCl
                   </div>
                   <div>
                     <div className="text-xs sm:text-sm md:text-[15px] font-semibold text-white">Resume.pdf</div>
-                    <div className="text-[10px] sm:text-xs text-zinc-400">Updated July 2026</div>
+                    <div className="text-[10px] sm:text-xs text-zinc-400">Latest resume</div>
                   </div>
                 </div>
 
                 <a
-                  href="https://raw.githubusercontent.com/tech-goddezz/My-Resume/main/Omigie_Elizabeth_Resume(CV).pdf"
+                  href="/OMIGIE_ELIZABETH_RESUME.pdf"
                   download="OMIGIE_ELIZABETH_RESUME.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -611,7 +611,7 @@ export const InteractiveModals: React.FC<InteractiveModalsProps> = ({ type, onCl
 
               {/* Main Download Button */}
               <a
-                href="https://raw.githubusercontent.com/tech-goddezz/My-Resume/main/Omigie_Elizabeth_Resume(CV).pdf"
+                href="/OMIGIE_ELIZABETH_RESUME.pdf"
                 download="OMIGIE_ELIZABETH_RESUME.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
