@@ -245,6 +245,16 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({
       video: 'https://res.cloudinary.com/eltckiww/video/upload/v1788190372/lv_0_20260831160550_gux19m.mp4',
       liveUrl: 'https://social-links-profile-neon-rho.vercel.app/',
     },
+    {
+      id: 10,
+      number: '10',
+      title: 'Apply Fast',
+      category: 'AI Product',
+      accent: 'orange' as const,
+      image: '/apply_fast_preview.jpg',
+      poster: '/apply_fast_preview.jpg',
+      liveUrl: 'https://applyfast.vercel.app',
+    },
   ];
 
   const projects: ProjectItem[] = siteProjectMeta.map((meta) => {

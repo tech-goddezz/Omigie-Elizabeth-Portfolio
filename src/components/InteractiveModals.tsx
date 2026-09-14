@@ -258,6 +258,19 @@ export const InteractiveModals: React.FC<InteractiveModalsProps> = ({ type, onCl
       poster: optimizeCloudinaryUrl('https://res.cloudinary.com/eltckiww/image/upload/v1788190366/file_00000000144081f485f854056aa8a786_frstcz.png', { width: 640 }),
       video: optimizeCloudinaryVideoUrl('https://res.cloudinary.com/eltckiww/video/upload/v1788190376/lv_0_20260831161252_xqbtdm.mp4', { width: 720 }),
     },
+    {
+      id: 'apply-fast',
+      number: '11',
+      title: 'Apply Fast',
+      subtitle: 'Job Search & Rapid Application Platform',
+      category: 'AI Product',
+      group: 'AI Products',
+      problem: 'Candidates spend countless hours repetitively filling identical application fields, leading to search fatigue and missed submission deadlines.',
+      caseStudy: 'Engineered an accelerated job search and application platform with rapid listing filtering, automated candidate profile matching, and one-click submission pipelines.',
+      url: 'https://applyfast.vercel.app',
+      tags: ['React', 'TypeScript', 'Tailwind CSS', 'Job Automation', 'Vite'],
+      poster: '/apply_fast_preview.jpg',
+    },
   ];
 
   const filteredProjects = allProjects.filter((p) => {
@@ -597,31 +610,45 @@ export const InteractiveModals: React.FC<InteractiveModalsProps> = ({ type, onCl
                   </div>
                 </div>
 
-                <a
-                  href="/OMIGIE_ELIZABETH_RESUME.pdf"
-                  download="OMIGIE_ELIZABETH_RESUME.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
+                  type="button"
+                  onClick={() => {
+                    const link = document.createElement('a');
+                    link.href = '/OMIGIE_ELIZABETH_RESUME.pdf';
+                    link.download = 'OMIGIE_ELIZABETH_RESUME.pdf';
+                    link.target = '_blank';
+                    link.rel = 'noopener noreferrer';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                  }}
                   aria-label="Download Omigie Elizabeth Resume PDF"
                   className="w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 rounded-lg md:rounded-xl bg-white/[0.04] hover:bg-purple-500/20 border border-white/10 hover:border-purple-500/40 flex items-center justify-center text-zinc-300 hover:text-white transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:outline-none"
                 >
                   <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4" aria-hidden="true" />
-                </a>
+                </button>
               </div>
 
               {/* Main Download Button */}
-              <a
-                href="/OMIGIE_ELIZABETH_RESUME.pdf"
-                download="OMIGIE_ELIZABETH_RESUME.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={onClose}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const link = document.createElement('a');
+                  link.href = '/OMIGIE_ELIZABETH_RESUME.pdf';
+                  link.download = 'OMIGIE_ELIZABETH_RESUME.pdf';
+                  link.target = '_blank';
+                  link.rel = 'noopener noreferrer';
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                }}
                 aria-label="Download Omigie Elizabeth full resume"
                 className="w-full py-2.5 sm:py-3 md:py-3.5 px-4 sm:px-5 md:px-6 rounded-xl sm:rounded-2xl bg-gradient-to-r from-[#6366F1] via-[#8B5CF6] to-[#D946EF] hover:brightness-110 text-white font-bold text-xs sm:text-sm md:text-[13px] uppercase tracking-wider flex items-center justify-center gap-2 md:gap-2.5 transition-all shadow-[0_0_25px_rgba(139,92,246,0.35)] cursor-pointer focus-visible:ring-2 focus-visible:ring-[#FF4D1A] focus-visible:outline-none"
               >
                 <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" aria-hidden="true" />
                 <span>DOWNLOAD RESUME</span>
-              </a>
+              </button>
 
               {/* Bottom Security / Privacy Note */}
               <div className="flex items-center justify-center gap-1.5 text-zinc-500 text-[10px] sm:text-xs">

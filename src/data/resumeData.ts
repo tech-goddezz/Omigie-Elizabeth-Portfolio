@@ -7,6 +7,7 @@ export interface PersonalInfo {
   github: string;
   linkedin: string;
   portfolio: string;
+  portfolio2?: string;
 }
 
 export interface ExperienceItem {
@@ -46,6 +47,7 @@ export const personalInfo: PersonalInfo = {
   github: 'github.com/tech-goddezz',
   linkedin: 'linkedin.com/in/elizabethomigie',
   portfolio: 'elizabeth-personal-website-six.vercel.app',
+  portfolio2: 'omigie-elizabeth-portfolio.vercel.app',
 };
 
 export const careerSummary: string =
@@ -95,6 +97,21 @@ export const experience: ExperienceItem[] = [
 ];
 
 export const selectedProjects: ResumeProject[] = [
+  {
+    title: 'Personal Portfolio',
+    subtitle: 'Omigie Elizabeth',
+    stack: 'React 19, TypeScript, Vite, Tailwind CSS, Three.js, React Three Fiber, GSAP, Motion, Google Gemini API',
+    tags: ['React 19', 'TypeScript', 'Three.js', 'GSAP', 'Gemini API'],
+    description:
+      'An animation-heavy, AI-integrated portfolio site featuring interactive 3D scenes, GSAP and Motion scroll interactions, and Gemini API capabilities.',
+    bullets: [
+      'Designed and built an animation-heavy, AI-integrated portfolio site with 3D scenes (Three.js/React Three Fiber) for the hero, network, and terminal sections, GSAP and Motion-driven scroll interactions, and a custom preloader.',
+      'Integrated the Google Gemini API to power AI-driven interactive features within the site.',
+      'Built dedicated service detail pages (Frontend Engineering, AI Product Integration, Product Prototyping), an interactive projects showcase with modals, and a script that programmatically generates an up-to-date PDF resume using pdf-lib.',
+      'Implemented client-side routing, browser history-aware modals, and full responsive behavior across desktop, tablet, and mobile.',
+    ],
+    onPdfResume: true,
+  },
   {
     title: 'DevClarity',
     subtitle: 'AI Thinking Assistant',
@@ -188,6 +205,19 @@ export const selectedProjects: ResumeProject[] = [
     onPdfResume: false,
   },
   {
+    title: 'Apply Fast',
+    subtitle: 'Job Search & Rapid Application Platform',
+    stack: 'React, TypeScript, Tailwind CSS, Vite',
+    tags: ['React', 'TypeScript', 'Job Automation', 'Tailwind CSS'],
+    description:
+      'A high-velocity job search and application platform designed for candidates to discover matching roles, auto-fill credentials, and submit rapid job applications.',
+    bullets: [
+      'Built a fast job search and application platform enabling job seekers to search, track, and apply quickly to job opportunities.',
+      'Designed responsive dashboard interfaces with application tracking, resume matching, and streamlined submission workflows.',
+    ],
+    onPdfResume: false,
+  },
+  {
     title: 'Frontend Mentor Challenges',
     subtitle: 'Applied UI Practice',
     stack: 'React, Tailwind CSS, Responsive Design',
@@ -203,20 +233,24 @@ export const selectedProjects: ResumeProject[] = [
 
 export const skills: SkillCategory[] = [
   {
-    category: 'Languages and Core: ',
+    category: 'Languages & Core',
     items: 'JavaScript, TypeScript, HTML5, CSS3',
   },
   {
-    category: 'Frontend: ',
-    items: 'React.js, React Native (Expo Router), Tailwind CSS, NativeWind, Three.js',
+    category: 'Frontend',
+    items: 'React.js (incl. React 19), React Native (Expo Router), Tailwind CSS, NativeWind',
   },
   {
-    category: 'State, Data and AI: ',
-    items: 'Zustand, Firebase, Supabase, Groq API, Llama 3.3',
+    category: '3D & Animation',
+    items: 'Three.js, React Three Fiber, GSAP, Motion (Framer Motion)',
   },
   {
-    category: 'Tools: ',
-    items: 'Git/GitHub, Figma, VS Code, Vite, Vercel, Render, Excel',
+    category: 'State, Data & AI',
+    items: 'Zustand, Firebase, Supabase, Groq API, Llama 3.3, Google Gemini API',
+  },
+  {
+    category: 'Backend & Tooling',
+    items: 'Node.js, Express, pdf-lib, Git/GitHub, Figma, VS Code, Vite, Vercel, Render, Excel',
   },
 ];
 
