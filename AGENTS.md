@@ -13,6 +13,7 @@ From this point forward, all future animations, interactions, and section enhanc
 9. **Existing Working Functionality**: All modals, preloader, video playback, GSAP triggers, and scroll animations must remain functional.
 10. **Targeted Surgical Edits**: Do not replace whole components when an enhancement can be achieved by modifying the existing component.
 11. **No Unrequested Global Changes**: Never make global design shifts when tasked with modifying an individual section.
+12. **Automatic Resume Syncing**: Whenever a new project is built or added to the project cards, ALWAYS automatically update it on the resume (`src/data/resumeData.ts` with `onPdfResume: true`, title, subtitle, stack, description, and bullet points) and regenerate the PDF resume (`npm run generate:resume`) so the downloadable resume in `public/` and `assets/` is immediately synchronized.
 
 ## Checkpoints & Restore Points
 ### Baseline / Base 0 (`base 0`)

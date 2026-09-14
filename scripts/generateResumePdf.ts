@@ -324,55 +324,72 @@ async function createResume() {
   });
 
   // ==========================================
-  // PAGE 2: Full-Width SELECTED INDEPENDENT PROJECTS
+  // PAGE 2+: Full-Width SELECTED INDEPENDENT PROJECTS
   // ==========================================
-  const page2 = pdfDoc.addPage([pageWidth, pageHeight]);
-  let page2Y = pageHeight - 45;
+  let currentPage = pdfDoc.addPage([pageWidth, pageHeight]);
+  let currentY = pageHeight - 45;
 
-  page2Y = renderSectionHeader(
-    page2,
+  currentY = renderSectionHeader(
+    currentPage,
     'SELECTED INDEPENDENT PROJECTS',
     margin,
-    page2Y,
+    currentY,
     contentWidth
   );
 
   const pdfProjects = selectedProjects.filter((p) => p.onPdfResume);
 
+  const ensureSpace = (neededHeight: number) => {
+    if (currentY - neededHeight < 40) {
+      currentPage = pdfDoc.addPage([pageWidth, pageHeight]);
+      currentY = pageHeight - 45;
+      currentY = renderSectionHeader(
+        currentPage,
+        'SELECTED INDEPENDENT PROJECTS (CONTINUED)',
+        margin,
+        currentY,
+        contentWidth
+      );
+    }
+  };
+
   pdfProjects.forEach((project, index) => {
-    if (index > 0) page2Y -= 8;
+    if (index > 0) currentY -= 8;
+
+    ensureSpace(35);
 
     // Project Title
     const headerTitle = project.subtitle
       ? `${project.title} — ${project.subtitle}`
       : project.title;
-    page2.drawText(headerTitle, {
+    currentPage.drawText(headerTitle, {
       x: margin,
-      y: page2Y,
+      y: currentY,
       size: 9.5,
       font: fontBold,
       color: darkCharcoal,
     });
-    page2Y -= 12;
+    currentY -= 12;
 
     // Stack line
-    page2.drawText(project.stack, {
+    currentPage.drawText(project.stack, {
       x: margin,
-      y: page2Y,
+      y: currentY,
       size: 8.5,
       font: fontItalic,
       color: subTextColor,
     });
-    page2Y -= 12;
+    currentY -= 12;
 
     // Bullets
     if (project.bullets && project.bullets.length > 0) {
       for (const bullet of project.bullets) {
-        page2Y = renderBullet(
-          page2,
+        ensureSpace(24);
+        currentY = renderBullet(
+          currentPage,
           bullet,
           margin,
-          page2Y,
+          currentY,
           contentWidth,
           8.5,
           10,

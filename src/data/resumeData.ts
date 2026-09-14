@@ -126,6 +126,19 @@ export const selectedProjects: ResumeProject[] = [
     onPdfResume: true,
   },
   {
+    title: 'Apply Fast',
+    subtitle: 'Job Search & Rapid Application Platform',
+    stack: 'React, TypeScript, Tailwind CSS, Vite',
+    tags: ['React', 'TypeScript', 'Job Automation', 'Tailwind CSS'],
+    description:
+      'A high-velocity job search and application platform designed for candidates to discover matching roles, auto-fill credentials, and submit rapid job applications.',
+    bullets: [
+      'Built a fast job search and application platform enabling job seekers to search, track, and apply quickly to job opportunities.',
+      'Designed responsive dashboard interfaces with application tracking, resume matching, and streamlined submission workflows.',
+    ],
+    onPdfResume: true,
+  },
+  {
     title: 'GTCO GTWorld App',
     subtitle: 'Mobile Application',
     stack: 'React Native, Expo Router, Zustand, NativeWind',
@@ -202,19 +215,6 @@ export const selectedProjects: ResumeProject[] = [
     tags: ['HTML5', 'CSS3', 'Flexbox', 'Mobile-First'],
     description:
       'A high-contrast bio-link interface with accessible >=44px touch targets, smooth keyboard focus rings, and zero dependencies.',
-    onPdfResume: false,
-  },
-  {
-    title: 'Apply Fast',
-    subtitle: 'Job Search & Rapid Application Platform',
-    stack: 'React, TypeScript, Tailwind CSS, Vite',
-    tags: ['React', 'TypeScript', 'Job Automation', 'Tailwind CSS'],
-    description:
-      'A high-velocity job search and application platform designed for candidates to discover matching roles, auto-fill credentials, and submit rapid job applications.',
-    bullets: [
-      'Built a fast job search and application platform enabling job seekers to search, track, and apply quickly to job opportunities.',
-      'Designed responsive dashboard interfaces with application tracking, resume matching, and streamlined submission workflows.',
-    ],
     onPdfResume: false,
   },
   {
