@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   X,
   ExternalLink,
@@ -37,6 +37,69 @@ export const InteractiveModals: React.FC<InteractiveModalsProps> = ({ type, onCl
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [serverError, setServerError] = useState<string | null>(null);
   const [caseFilter, setCaseFilter] = useState<'All' | 'AI Products' | 'Frontend Engineering' | 'Mobile'>('All');
+  const [downloadStatus, setDownloadStatus] = useState<'idle' | 'downloading' | 'success'>('idle');
+  const downloadTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Clear download timer on unmount or when modal changes
+  useEffect(() => {
+    if (type !== 'download-cv') {
+      setDownloadStatus('idle');
+    }
+    return () => {
+      if (downloadTimeoutRef.current) {
+        clearTimeout(downloadTimeoutRef.current);
+      }
+    };
+  }, [type]);
+
+  const handleDownloadResume = async (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    if (downloadStatus === 'downloading') return;
+
+    setDownloadStatus('downloading');
+
+    try {
+      // 1. Fetch file as blob for real network request verification
+      const response = await fetch('/OMIGIE_ELIZABETH_RESUME.pdf');
+      if (!response.ok) throw new Error('Download request failed');
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = 'OMIGIE_ELIZABETH_RESUME.pdf';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      setTimeout(() => {
+        window.URL.revokeObjectURL(blobUrl);
+      }, 2000);
+
+      // Tactile delay so the user clearly perceives the active downloading feedback
+      await new Promise((resolve) => setTimeout(resolve, 600));
+      setDownloadStatus('success');
+    } catch {
+      // Fallback: direct browser anchor trigger
+      const link = document.createElement('a');
+      link.href = '/OMIGIE_ELIZABETH_RESUME.pdf';
+      link.download = 'OMIGIE_ELIZABETH_RESUME.pdf';
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setDownloadStatus('success');
+    }
+
+    if (downloadTimeoutRef.current) clearTimeout(downloadTimeoutRef.current);
+    downloadTimeoutRef.current = setTimeout(() => {
+      setDownloadStatus('idle');
+    }, 4000);
+  };
 
   // Handle ESC key and scroll lock
   useEffect(() => {
@@ -599,56 +662,171 @@ export const InteractiveModals: React.FC<InteractiveModalsProps> = ({ type, onCl
               </div>
 
               {/* Resume Strip */}
-              <div className="p-2.5 sm:p-3 md:p-3.5 rounded-xl sm:rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-between backdrop-blur-md">
-                <div className="flex items-center gap-2.5 sm:gap-3 md:gap-3.5">
-                  <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-lg sm:rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-300 flex items-center justify-center shrink-0" aria-hidden="true">
-                    <FileText className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5" />
+              <div className={`p-2.5 sm:p-3 md:p-3.5 rounded-xl sm:rounded-2xl border transition-all duration-300 flex items-center justify-between backdrop-blur-md ${
+                downloadStatus === 'downloading'
+                  ? 'bg-purple-950/30 border-purple-500/40 shadow-[0_0_20px_rgba(168,85,247,0.15)]'
+                  : downloadStatus === 'success'
+                  ? 'bg-emerald-950/30 border-emerald-500/40 shadow-[0_0_20px_rgba(16,185,129,0.15)]'
+                  : 'bg-white/[0.03] border-white/10'
+              }`}>
+                <div className="flex items-center gap-2.5 sm:gap-3 md:gap-3.5 min-w-0">
+                  <div className={`w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-lg sm:rounded-xl border flex items-center justify-center shrink-0 transition-colors ${
+                    downloadStatus === 'downloading'
+                      ? 'bg-purple-500/20 border-purple-500/40 text-purple-200'
+                      : downloadStatus === 'success'
+                      ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-200'
+                      : 'bg-purple-500/10 border-purple-500/20 text-purple-300'
+                  }`} aria-hidden="true">
+                    {downloadStatus === 'downloading' ? (
+                      <Loader2 className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 animate-spin text-purple-300" />
+                    ) : downloadStatus === 'success' ? (
+                      <Check className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5 text-emerald-300 stroke-[2.5]" />
+                    ) : (
+                      <FileText className="w-4 h-4 sm:w-4.5 sm:h-4.5 md:w-5 md:h-5" />
+                    )}
                   </div>
-                  <div>
-                    <div className="text-xs sm:text-sm md:text-[15px] font-semibold text-white">Resume.pdf</div>
-                    <div className="text-[10px] sm:text-xs text-zinc-400">Latest resume</div>
+                  <div className="min-w-0">
+                    <div className="text-xs sm:text-sm md:text-[15px] font-semibold text-white flex items-center gap-2">
+                      <span>Resume.pdf</span>
+                      {downloadStatus === 'downloading' && (
+                        <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-mono font-medium bg-purple-500/25 text-purple-300 border border-purple-500/30 animate-pulse">
+                          DOWNLOADING
+                        </span>
+                      )}
+                      {downloadStatus === 'success' && (
+                        <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-mono font-medium bg-emerald-500/25 text-emerald-300 border border-emerald-500/30">
+                          DOWNLOADED
+                        </span>
+                      )}
+                    </div>
+                    <div className="text-[10px] sm:text-xs truncate">
+                      {downloadStatus === 'downloading' ? (
+                        <span className="text-purple-300 flex items-center gap-1.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-ping shrink-0" />
+                          Initiating PDF transfer...
+                        </span>
+                      ) : downloadStatus === 'success' ? (
+                        <span className="text-emerald-400 font-medium">
+                          Saved to your downloads folder
+                        </span>
+                      ) : (
+                        <span className="text-zinc-400">Latest resume • 2 Pages (PDF)</span>
+                      )}
+                    </div>
                   </div>
                 </div>
 
+                {/* Download Arrow Button */}
                 <button
                   type="button"
-                  onClick={() => {
-                    const link = document.createElement('a');
-                    link.href = '/OMIGIE_ELIZABETH_RESUME.pdf';
-                    link.download = 'OMIGIE_ELIZABETH_RESUME.pdf';
-                    link.target = '_blank';
-                    link.rel = 'noopener noreferrer';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                  }}
-                  aria-label="Download Omigie Elizabeth Resume PDF"
-                  className="w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 rounded-lg md:rounded-xl bg-white/[0.04] hover:bg-purple-500/20 border border-white/10 hover:border-purple-500/40 flex items-center justify-center text-zinc-300 hover:text-white transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:outline-none"
+                  onClick={handleDownloadResume}
+                  disabled={downloadStatus === 'downloading'}
+                  aria-label={
+                    downloadStatus === 'downloading'
+                      ? 'Downloading Omigie Elizabeth Resume PDF...'
+                      : downloadStatus === 'success'
+                      ? 'Resume downloaded. Click to download again'
+                      : 'Download Omigie Elizabeth Resume PDF'
+                  }
+                  className={`shrink-0 w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 rounded-lg md:rounded-xl border flex items-center justify-center transition-all focus-visible:ring-2 focus-visible:ring-[#FF4D1A] focus-visible:outline-none ${
+                    downloadStatus === 'downloading'
+                      ? 'bg-purple-500/20 border-purple-500/50 text-purple-300 shadow-[0_0_12px_rgba(168,85,247,0.3)] cursor-wait'
+                      : downloadStatus === 'success'
+                      ? 'bg-emerald-500/20 hover:bg-emerald-500/30 border-emerald-500/50 text-emerald-300 shadow-[0_0_12px_rgba(16,185,129,0.3)] cursor-pointer'
+                      : 'bg-white/[0.04] hover:bg-purple-500/20 border-white/10 hover:border-purple-500/40 text-zinc-300 hover:text-white cursor-pointer active:scale-95'
+                  }`}
                 >
-                  <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4" aria-hidden="true" />
+                  {downloadStatus === 'downloading' ? (
+                    <Loader2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 animate-spin text-purple-300" aria-hidden="true" />
+                  ) : downloadStatus === 'success' ? (
+                    <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-300 stroke-[2.5]" aria-hidden="true" />
+                  ) : (
+                    <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4" aria-hidden="true" />
+                  )}
                 </button>
               </div>
 
               {/* Main Download Button */}
               <button
                 type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  const link = document.createElement('a');
-                  link.href = '/OMIGIE_ELIZABETH_RESUME.pdf';
-                  link.download = 'OMIGIE_ELIZABETH_RESUME.pdf';
-                  link.target = '_blank';
-                  link.rel = 'noopener noreferrer';
-                  document.body.appendChild(link);
-                  link.click();
-                  document.body.removeChild(link);
-                }}
-                aria-label="Download Omigie Elizabeth full resume"
-                className="w-full py-2.5 sm:py-3 md:py-3.5 px-4 sm:px-5 md:px-6 rounded-xl sm:rounded-2xl bg-gradient-to-r from-[#6366F1] via-[#8B5CF6] to-[#D946EF] hover:brightness-110 text-white font-bold text-xs sm:text-sm md:text-[13px] uppercase tracking-wider flex items-center justify-center gap-2 md:gap-2.5 transition-all shadow-[0_0_25px_rgba(139,92,246,0.35)] cursor-pointer focus-visible:ring-2 focus-visible:ring-[#FF4D1A] focus-visible:outline-none"
+                onClick={handleDownloadResume}
+                disabled={downloadStatus === 'downloading'}
+                aria-label={
+                  downloadStatus === 'downloading'
+                    ? 'Resume is currently downloading'
+                    : downloadStatus === 'success'
+                    ? 'Resume download initiated. Click to download again'
+                    : 'Download Omigie Elizabeth full resume'
+                }
+                className={`w-full py-2.5 sm:py-3 md:py-3.5 px-4 sm:px-5 md:px-6 rounded-xl sm:rounded-2xl font-bold text-xs sm:text-sm md:text-[13px] uppercase tracking-wider flex items-center justify-center gap-2 md:gap-2.5 transition-all focus-visible:ring-2 focus-visible:ring-[#FF4D1A] focus-visible:outline-none relative overflow-hidden ${
+                  downloadStatus === 'downloading'
+                    ? 'bg-gradient-to-r from-[#4F46E5] via-[#7C3AED] to-[#9333EA] text-white shadow-[0_0_30px_rgba(124,58,237,0.5)] border border-purple-400/40 cursor-wait'
+                    : downloadStatus === 'success'
+                    ? 'bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-500 hover:brightness-110 text-white shadow-[0_0_25px_rgba(16,185,129,0.4)] border border-emerald-400/40 cursor-pointer'
+                    : 'bg-gradient-to-r from-[#6366F1] via-[#8B5CF6] to-[#D946EF] hover:brightness-110 text-white shadow-[0_0_25px_rgba(139,92,246,0.35)] cursor-pointer active:scale-[0.99]'
+                }`}
               >
-                <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" aria-hidden="true" />
-                <span>DOWNLOAD RESUME</span>
+                {downloadStatus === 'downloading' && (
+                  <motion.div
+                    initial={{ x: '-100%' }}
+                    animate={{ x: '100%' }}
+                    transition={{ repeat: Infinity, duration: 1.2, ease: 'linear' }}
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent pointer-events-none"
+                  />
+                )}
+
+                {downloadStatus === 'downloading' ? (
+                  <>
+                    <Loader2 className="w-4 h-4 text-white animate-spin shrink-0" aria-hidden="true" />
+                    <span>DOWNLOADING RESUME...</span>
+                  </>
+                ) : downloadStatus === 'success' ? (
+                  <>
+                    <CheckCircle2 className="w-4 h-4 text-white shrink-0" aria-hidden="true" />
+                    <span>DOWNLOAD STARTED!</span>
+                  </>
+                ) : (
+                  <>
+                    <Download className="w-4 h-4 text-white shrink-0" aria-hidden="true" />
+                    <span>DOWNLOAD RESUME</span>
+                  </>
+                )}
               </button>
+
+              {/* Dynamic Feedback Notification Bar */}
+              <AnimatePresence>
+                {downloadStatus !== 'idle' && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -6, height: 0 }}
+                    animate={{ opacity: 1, y: 0, height: 'auto' }}
+                    exit={{ opacity: 0, y: -6, height: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="overflow-hidden"
+                  >
+                    <div className={`px-3 py-2 rounded-xl border flex items-center justify-between gap-2 text-[11px] sm:text-xs ${
+                      downloadStatus === 'downloading'
+                        ? 'bg-purple-950/50 border-purple-500/30 text-purple-200'
+                        : 'bg-emerald-950/50 border-emerald-500/30 text-emerald-200'
+                    }`}>
+                      <div className="flex items-center gap-2 min-w-0">
+                        {downloadStatus === 'downloading' ? (
+                          <Loader2 className="w-3.5 h-3.5 text-purple-400 animate-spin shrink-0" />
+                        ) : (
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                        )}
+                        <span className="truncate font-medium">
+                          {downloadStatus === 'downloading'
+                            ? 'Downloading OMIGIE_ELIZABETH_RESUME.pdf...'
+                            : 'Download initiated! Check your browser downloads folder.'}
+                        </span>
+                      </div>
+                      <span className="text-[10px] font-mono opacity-80 shrink-0">
+                        {downloadStatus === 'downloading' ? 'Transferring' : 'Ready'}
+                      </span>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
               {/* Bottom Security / Privacy Note */}
               <div className="flex items-center justify-center gap-1.5 text-zinc-500 text-[10px] sm:text-xs">
